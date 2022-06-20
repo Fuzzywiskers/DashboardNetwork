@@ -2,46 +2,24 @@
 /*upload file into dashboard*/
 
 session_start();
-
-$orderTesting = 0;
+include "dbh.inc.php";
 
 if(isset($_POST['submit-file'])){
     $username = $_SESSION['username'];
     $project = $_COOKIE['sessionOpened'];
+    $order;
 
     /*dashboard order*/
-    include_once "dbh.inc.php";
-    $getOrder = "SELECT * FROM dashboard WHERE dashboardUse='$username' AND dashboardProject='$project'";
-    $getOrderStmt = mysqli_stmt_init($conn);
-    if(!mysqli_stmt_prepare($getOrderStmt, $getOrder)){
-        header("location: ../dashboard.php?error=sqlFailure");
-    }else{
-        mysqli_stmt_execute($getOrderStmt);
-        $getOrderResult = mysqli_stmt_get_result($getOrderStmt);
-        while($row=mysqli_fetch_assoc($getOrderResult)){
-            if($row['dashboardOrder'] >= $orderTesting){
-                $orderTesting++;
-                $order = $orderTesting;
-            }else if(!$order){
-                $order = 0;
-            }
-        }
-        if(!$order){
-            $order = 0;
-        }else if($order){
-            echo $order;
-        }else{
-            header("location: ../dashboard.php?error=orderFailure");
-        }
-    }
+    include_once "phpFunctions.inc.php";
+    $order = uploadNum($username, $project, $order, $conn);
 
     /*get file info*/
-    $file = $_FILES['file'];
-    $fileName = $file['name'];
-    $fileTye = $file['type'];
-    $fileTempName = $file['tmp_name'];
-    $fileError = $file['error'];
-    $fileSize = $file['size'];
+    $fileOne = $_FILES['fileOne'];
+    $fileName = $fileOne['name'];
+    $fileTempName = $fileOne['tmp_name'];
+    $fileError = $fileOne['error'];
+    $fileSize = $fileOne['size'];
+    $fileType = "img";
 
     /*get file extention*/
     $fileExt = explode(".", $fileName);
@@ -56,10 +34,8 @@ if(isset($_POST['submit-file'])){
             if($fileSize < 20000000){
                 $imgFullName = $fileName.".".uniqid("", true).".".$fileActExt;      /*creates file name for database*/
                 $fileDest = "../uploadFile/".$imgFullName;
-
-                include_once "dbh.inc.php";
                 
-                $upload = "INSERT INTO dashboard (dashboardUse, dashboardProject, dashboardFile, dashboardOrder) VALUES (?, ?, ?, ?)";
+                $upload = "INSERT INTO dashboard (dashboardUse, dashboardProject, dashboardFile, dashboardOrder, fileType, fileExt) VALUES (?, ?, ?, ?, ?, ?)";
                 $stmt = mysqli_stmt_init($conn);
                 if ($conn->connect_error) {
                     die("Connection failed: " . $conn->connect_error);
@@ -68,22 +44,12 @@ if(isset($_POST['submit-file'])){
                     header("location: ../dashboard.php?error=sqlFailed");
                     exit();
                 }else{
-                    mysqli_stmt_bind_param($stmt, "ssss", $username, $project, $imgFullName, $order);
+                    mysqli_stmt_bind_param($stmt, "ssssss", $username, $project, $imgFullName, $order, $fileType, $fileActExt);
                     move_uploaded_file($fileTempName, $fileDest);
 
                     mysqli_stmt_execute($stmt);
                     mysqli_stmt_close($stmt);
                 }
-
-                echo "<p>".$order."</p>";
-
-                /*check connection
-                if($conn->query($upload)===TRUE){
-                    echo "New record created successfully";
-                }else{
-                    echo "Error: ".$upload."<br>".$conn->error;
-                }*/
-
                 header("location: ../dashboard.php?upload=success");
             }else{
                 header("location: ../dashboard.php?error=tooBig");
@@ -96,5 +62,58 @@ if(isset($_POST['submit-file'])){
     }else{
         header("location: ../dashboard.php?error=fileNotAllowed");
         exit();
+    }
+}
+
+if(isset($_POST['submit-video'])){
+    $usernameTwo = $_SESSION['username'];
+    $projectTwo = $_COOKIE['sessionOpened'];
+    $orderTwo = 0;
+
+    /*create order for video*/
+    include_once "phpFunctions.inc.php";
+    $orderTwo = uploadNum($usernameTwo, $projectTwo, $orderTwo, $conn);
+
+    /*get file info*/
+    $fileTwo = $_FILES['fileTwo'];
+    $fileTwoName = $fileTwo['name'];
+    $fileTwoTempName = $fileTwo['tmp_name'];
+    $fileTwoError = $fileTwo['error'];
+    $fileTwoSize = $fileTwo['size'];
+
+    if(empty($error) == True){
+        /*get file ext*/
+        $fileTwoExt = explode(".", $fileTwoName);
+        $fileTwoActExt = strtolower(end($fileTwoExt));
+        $fileTwoType = "video";
+
+        /*allowed extenstions*/
+        $allowedTwo = array("mp4", "avi", "3gp", "mov", "mpeg");
+        if(in_array($fileTwoActExt, $allowedTwo)){
+            /*check file to see if it is good to be uploaded*/
+            if($fileTwoSize < 200000000){
+                $upload = "INSERT INTO dashboard (dashboardUse, dashboardProject, dashboardFile, dashboardOrder, fileType, fileExt) VALUES (?, ?, ?, ?, ?, ?)";
+                $stmt = mysqli_stmt_init($conn);
+                if($conn->connection_error){
+                    die("Connection Failed: ".$conn->connection_error);
+                }
+                if(!mysqli_stmt_prepare($stmt, $upload)){
+                    header("location: ../dashboard.php?error=sqlFailed");
+                }else{
+                    mysqli_stmt_bind_param($stmt, "ssssss", $usernameTwo, $projectTwo, $fileTwoName, $orderTwo, $fileTwoType, $fileTwoActExt);
+                    move_uploaded_file($fileTwoTempName, "../uploadFile/".$fileTwoName);
+
+                    mysqli_stmt_execute($stmt);
+                    mysqli_stmt_close($stmt);
+                }
+                header("location: ../dashboard.php?uploade=success");
+            }else{
+            header("location: ../dashboard.php?error=fileSizeTooBig");
+            }
+        }else{
+        header("location: ../dashboard.php?error=fileTypeNotAllowed");
+        }
+    }else{
+    header("location: ../dashboard.php?error=errorInFile");
     }
 }

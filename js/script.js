@@ -42,66 +42,170 @@ if(projects){
   })
 }
 
+/*make div for elements dragable*/
+const elements = document.getElementsByName("dashboardItem");
+const btnVideoElements = document.getElementsByName("btnVideoElement");
+let isResizing = false;
+let isBtnVideo = false;
 
-/*make dashboard images dragable*/
-let elements = document.getElementsByName("dashboardImg");
-numberElements = elements.length;
 
-while(numberElements !== 0){
-    numberElements--;
-    dragElement(elements[numberElements], numberElements);
-    /*resizeElement(elements[numberElements], numberElements)*/
-}
-
-function dragElement(element, num){
-    let pos1=0, pos2=0, pos3=0, pos4=0;
-    if(document.getElementById(element.id + "img")){      /*make image dragable in div Id*/
-        document.getElementById(element.id + "img").onmousedown = dragMouseDown;
-      }else{      /*makes the div movable from anywhere inside*/
-        element.onmousedown = dragMouseDown;
+/*btnVideo Paused or Playing*/
+btnVideoElements.forEach(function(div){
+  let btnVideoClass = div.classList.toString();
+  let btnVideoNum = btnVideoClass.split("_")[1];
+  div.addEventListener("mouseover", function(){
+    div.addEventListener("mousedown", function(){
+      isBtnVideo = true;
+      console.log(document.querySelector("#dashboardVid video"));
+      //btnVideoMouseDown(div, document.querySelector("#"+btnVideoNum+" video"));
+    });
+    div.addEventListener("mouseup", btnVideoMouseUp);
+    function btnVideoMouseDown(btn, vid){
+      console.log(vid);
     }
-
-    function dragMouseDown(e){
-        e=e || window.event;
-        e.preventDefault();
-        
-        /*get mouse position*/
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        document.onmouseup = closeDragElement;
-
-        /*call function whenever the cursor moves*/
-        document.onmousemove = elementDrag;
+    function btnVideoMouseUp(){
+      isBtnVideo = false;
+      console.log("false");
     }
+  })
+});
 
-    function elementDrag(e){
-        e=e || window.event;
-        e.preventDefault();
 
-        /*get new mouse position*/
-        pos1 = pos3-e.clientX;
-        pos2 = pos4-e.clientY;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-
-        /*set elements new postition*/
-        element.style.top = (element.offsetTop-pos2)+"px";
-        element.style.left = (element.offsetLeft-pos1)+"px";
-
-        /*set image location session*/
-        let top=element.style.top, left=element.style.left;
-        writeCookie("imageTop"+num, top, 1);
-        writeCookie("imageLeft"+num, left, 1);
-        imageTopTest = getCookie("imageTop"+num), imageLeftTest = getCookie("imageLeft"+num);
-    }
-
-    function closeDragElement(){
-        /*stop moving element once mouse stops moving*/
-        document.onmouseup = null;
-        document.onmousemove = null;
-        window.location="../officialNewtwork/includes/dashboard.inc.php";
-        console.log("moved");
+if(elements){
+  elements.forEach(function(div, index){
+    div.addEventListener("mouseover", function(){
+      f1Re(div, index);
+    })
+    div.addEventListener("mousedown", function(){
+      /*check if vidBtnElement is not being pressed*/
+      if(!isResizing && !isBtnVideo){
+        f1(div, index);
       }
+    });
+  })
+}
+
+function f1(e, num){
+  console.log("drag");
+  window.addEventListener("mouseup", f3);
+  window.addEventListener("mousemove", f2);
+
+  /*get mouse position*/
+  let prevX = e.clientX;
+  let prevY = e.clientY;
+
+  function f2(e){
+    if(!isResizing && !isBtnVideo){
+      /*find new mouse position*/
+      let newX = prevX-e.clientX;
+      let newY = prevY-e.clientY;
+
+      /*find current position of element*/
+      const domRect = elements[num].getBoundingClientRect();
+
+      /*set new position*/
+      elements[num].style.left = domRect.left-newX+"px";
+      elements[num].style.top = domRect.top-newY+"px";
+      
+      cookieLeft = domRect.left-newX;
+      cookieTop = domRect.top-newY;
+
+      prevX = e.clientX;
+      prevY = e.clientY;
+    }
+  }
+
+  function f3(){
+    console.log(cookieLeft);
+    writeCookie("elX"+num, cookieLeft, 1);
+    writeCookie("elY"+num, cookieTop, 1);
+    window.removeEventListener("mousemove", f2);
+    window.removeEventListener("mouseup", f3);
+    window.location= "../officialNewtwork/includes/dashboard.inc.php";
+  }
 }
 
 
+/*resizing function*/
+function f1Re(e, num){
+  let resizers = elements[num].querySelectorAll(".resizer");
+  let currentResizer;
+  let cookieWidth;
+  let cookieHeight;
+  let cookieTop;
+  let cookieLeft;
+  for(let resizer of resizers){
+    resizer.addEventListener("mousedown", f1Re2);
+
+    function f1Re2(e){
+      isResizing = true;
+      currentResizer = e.target;
+
+      let prevX = e.clientX;
+      let prevY = e.clientY;
+
+      window.addEventListener("mousemove", f2Re2);
+      window.addEventListener("mouseup", f3Re2);
+
+      function f2Re2(e){
+        const domRect = elements[num].getBoundingClientRect();
+
+        /*dragging for corners*/
+        if(currentResizer.classList.contains("se")){
+          elements[num].style.width = domRect.width-(prevX-e.clientX)+"px";
+          elements[num].style.height = domRect.height-(prevY-e.clientY)+"px";
+          cookieWidth = domRect.width-(prevX-e.clientX)+"px";
+          cookieHeight = domRect.height-(prevY-e.clientY)+"px";
+        }
+        else if(currentResizer.classList.contains("sw")){
+          elements[num].style.width = domRect.width+(prevX-e.clientX)+"px";
+          elements[num].style.height = domRect.height-(prevY-e.clientY)+"px";
+          elements[num].style.left = domRect.left-(prevX-e.clientX)+"px";
+          cookieWidth = domRect.width+(prevX-e.clientX)+"px";
+          cookieHeight = domRect.height-(prevY-e.clientY)+"px";
+          cookieLeft = domRect.left-(prevX-e.clientX)+"px";
+        }
+        else if(currentResizer.classList.contains("ne")){
+          elements[num].style.width = domRect.width-(prevX-e.clientX)+"px";
+          elements[num].style.height = domRect.height+(prevY-e.clientY)+"px";
+          elements[num].style.top = domRect.top-(prevY-e.clientY)+"px";
+          cookieWidth = domRect.width-(prevX-e.clientX)+"px";
+          cookieHeight = domRect.height+(prevY-e.clientY)+"px";
+          cookieTop = domRect.top-(prevY-e.clientY)+"px";
+        }
+        else if(currentResizer.classList.contains("nw")){
+          elements[num].style.width = domRect.width+(prevX-e.clientX)+"px";
+          elements[num].style.height = domRect.height+(prevY-e.clientY)+"px";
+          elements[num].style.top = domRect.top-(prevY-e.clientY)+"px";
+          elements[num].style.left = domRect.left-(prevX-e.clientX)+"px";
+          cookieWidth = domRect.width+(prevX-e.clientX)+"px";
+          cookieHeight = domRect.height+(prevY-e.clientY)+"px";
+          cookieTop = domRect.top-(prevY-e.clientY)+"px";
+          cookieLeft = domRect.left-(prevX-e.clientX)+"px";
+        }
+
+        /*set mouse to current position*/
+        prevX = e.clientX;
+        prevY = e.clientY;
+      }
+
+      function f3Re2(){
+        writeCookie("resizeWidth"+num, cookieWidth, 1);
+        writeCookie("resizeHeight"+num, cookieHeight, 1);
+        if(cookieTop){
+          writeCookie("elY"+num, cookieTop, 1);
+          console.log(cookieTop);
+        }
+        if(cookieLeft){
+          writeCookie("elX"+num, cookieLeft, 1);
+          console.log(cookieLeft);
+        }
+        /*window.location = "../officialNewtwork/includes/dashboard.inc.php";*/
+        window.removeEventListener("mousemove", f2Re2);
+        window.removeEventListener("mouseup", f3Re2);
+        isResizing = false;
+        console.log(isResizing+"2");
+      }
+    }
+  }
+}

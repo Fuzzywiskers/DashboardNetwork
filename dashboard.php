@@ -8,7 +8,7 @@ session_start();
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style3.css">
     <title>Dashboard</title>
 </head>
 <body>
@@ -17,10 +17,17 @@ session_start();
         <div>&plus;</div>
         <!--add a form here for the links-->
         <li>
-            <a href="#">Add File</a>
+            <a href="#">Add Image</a>
             <form action="includes/upload.inc.php" method="post" enctype="multipart/form-data">
-                <input type="file" name="file">
-                <button type="submit" name="submit-file">Upload File</button>
+                <input type="file" name="fileOne">
+                <button type="submit" name="submit-file">Upload Image</button>
+            </form>
+        </li>
+        <li>
+            <a href="#">Add Video</a>
+            <form action="includes/upload.inc.php" method="post" enctype="multipart/form-data">
+                <input type="file" name="fileTwo">
+                <input type="submit" name="submit-video" value="Upload Video">
             </form>
         </li>
         <li><a href="#">Add Audio</a></li>
@@ -59,11 +66,30 @@ session_start();
             }
 
             /*echo "<div><img src='uploadFile/".$row['dashboardFile']."' class=".$_SESSION['dashOrder']."></div>";*/
-            $filePlace = "SELECT dashboardTop, dashboardLeft FROM dashboard WHERE dashboardUse='$username' AND dashboardProject='$project' AND dashboardOrder=".$_SESSION['dashOrder'].";";
+            $filePlace = "SELECT dashboardTop, dashboardLeft, dashboardReWidth, dashboardReHeight, fileType, fileExt FROM dashboard WHERE dashboardUse='$username' AND dashboardProject='$project' AND dashboardOrder=".$_SESSION['dashOrder'].";";
             $fileResult = mysqli_query($conn, $filePlace);
             if(mysqli_num_rows($result)>0){
                 $set = mysqli_fetch_assoc($fileResult);
-                echo "<div id='dashboardImg' class=".$_SESSION['dashOrder']." name='dashboardImg' style='top: ".$set['dashboardTop']."; left: ".$set['dashboardLeft'].";'><img src='uploadFile/".$row['dashboardFile']."'></div>";    
+
+                if($set['fileType'] == "img"){
+                    echo "<div id='dashboardImg' class='".$_SESSION['dashOrder']." resizerImg' name='dashboardItem' style='background-image: url(uploadFile/".$row['dashboardFile']."); background-repeat: no-repeat; background-size: 100% 100%; width: 100px; height: 100px; top: ".$set['dashboardTop']."px; left: ".$set['dashboardLeft']."px; width: ".$set['dashboardReWidth']."; height: ".$set['dashboardReHeight']."'>
+                        <div class='resizer ne'></div>
+                        <div class='resizer nw'></div>
+                        <div class='resizer se'></div>
+                        <div class='resizer sw'></div>
+                    </div>";   
+                }elseif($set['fileType'] == "video"){
+                    echo "<div id='dashboardVid 0' class='".$_SESSION['dashOrder']."' name='dashboardItem' style='position: absolute; width: 100px; height: 100px; top: ".$set['dashboardTop']."px; left: ".$set['dashboardLeft']."px; width: ".$set['dashboardReWidth']."; height: ".$set['dashboardReHeight']."'>
+                            <video id='vidId' style='width: 100%; height: 100%; z-index: -2;'>
+                                <source src='uploadFile/".$row['dashboardFile']."' type='video/".$set['fileExt']."'>
+                            </video>
+                            <div id='vidBtn' class='btnVideoNum_".$_SESSION['dashOrder']."' name='btnVideoElement' style='z-index: 0; position: absolute; top: 90%;'>Play</div>
+                            <div class='resizer ne'></div>
+                            <div class='resizer nw'></div>
+                            <div class='resizer se'></div>
+                            <div class='resizer sw'></div>
+                        </div>";
+                }
             }
         }
     }
