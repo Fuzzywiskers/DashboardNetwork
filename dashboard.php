@@ -79,7 +79,7 @@ session_start();
                         <div class='resizer sw'></div>
                     </div>";   
                 }elseif($set['fileType'] == "video"){
-                    echo "<div id='dashboardVid 0' class='".$_SESSION['dashOrder']."' name='dashboardItem' style='position: absolute; width: 100px; height: 100px; top: ".$set['dashboardTop']."px; left: ".$set['dashboardLeft']."px; width: ".$set['dashboardReWidth']."; height: ".$set['dashboardReHeight']."'>
+                    echo "<div id='dashboardVid' class='".$_SESSION['dashOrder']."' name='dashboardItem' style='position: absolute; width: 100px; height: 100px; top: ".$set['dashboardTop']."px; left: ".$set['dashboardLeft']."px; width: ".$set['dashboardReWidth']."; height: ".$set['dashboardReHeight']."'>
                             <video id='vidId' style='width: 100%; height: 100%; z-index: -2;'>
                                 <source src='uploadFile/".$row['dashboardFile']."' type='video/".$set['fileExt']."'>
                             </video>

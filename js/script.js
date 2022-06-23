@@ -53,22 +53,29 @@ let isBtnVideo = false;
 btnVideoElements.forEach(function(div){
   let btnVideoClass = div.classList.toString();
   let btnVideoNum = btnVideoClass.split("_")[1];
-  div.addEventListener("mouseover", function(){
-    div.addEventListener("mousedown", function(){
-      isBtnVideo = true;
-      console.log(document.querySelector("#dashboardVid video"));
-      //btnVideoMouseDown(div, document.querySelector("#"+btnVideoNum+" video"));
-    });
-    div.addEventListener("mouseup", btnVideoMouseUp);
-    function btnVideoMouseDown(btn, vid){
-      console.log(vid);
-    }
-    function btnVideoMouseUp(){
-      isBtnVideo = false;
-      console.log("false");
-    }
-  })
+  div.addEventListener("mousedown", function(){
+    btnVideoMouseDown(div, btnVideoNum);
+  });
 });
+
+function btnVideoMouseDown(div, num){
+  window.addEventListener("mouseup", btnVideoMouseUp);
+  isBtnVideo = true;
+
+  function btnVideoMouseUp(){
+    video = document.querySelector("[class='"+num+"'] video");
+    if(video.paused){
+      div.innerHTML = "Pause";
+      video.play();
+    }else if(!video.paused){
+      div.innerHTML = "Play";
+      video.pause();
+    }
+
+    isBtnVideo = false;
+    window.removeEventListener("mouseup", btnVideoMouseUp);
+  }
+}
 
 
 if(elements){
@@ -209,3 +216,4 @@ function f1Re(e, num){
     }
   }
 }
+
