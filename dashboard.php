@@ -30,7 +30,13 @@ session_start();
                 <input type="submit" name="submit-video" value="Upload Video">
             </form>
         </li>
-        <li><a href="#">Add Audio</a></li>
+        <li>
+            <a href="#">Add Audio</a>
+            <form action='includes/upload.inc.php' method='post' enctype='multipart/form-data'>
+                <input type='file' name='fileThree'>
+                <input type='submit' name='submit-audio' value='Upload Audio'>
+            </form>
+        </li>
         <li><a href="#">Add Image</a></li>
     </nav> 
 
@@ -89,6 +95,13 @@ session_start();
                             <div class='resizer se'></div>
                             <div class='resizer sw'></div>
                         </div>";
+                }elseif($set['fileType'] == "audio"){
+                    echo "<div id='dashboardAudio' class='".$_SESSION['dashOrder']."' name='dashboardItem' style='position: absolute; top: ".$set['dashboardTop']."px; left: ".$set['dashboardLeft']."px;'>
+                        <audio id='audId' style='z-index: -2'>
+                            <source src='uploadFile/".$row['dashboardFile']."' type='audio/".$set['fileExt']."'></source>
+                        </audio>
+                        <div id='audBtn' class='btnAudioNum_".$_SESSION['dashOrder']."' name='btnAudioElement' sytle='position: absolute; top: 50%; left: 50%; transform: -50%,-50%;'>Play</div>
+                    </div>";
                 }
             }
         }

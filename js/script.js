@@ -45,8 +45,9 @@ if(projects){
 /*make div for elements dragable*/
 const elements = document.getElementsByName("dashboardItem");
 const btnVideoElements = document.getElementsByName("btnVideoElement");
+const btnAudioElements = document.getElementsByName('btnAudioElement');
 let isResizing = false;
-let isBtnVideo = false;
+let isPlayBtn = false;
 
 
 /*btnVideo Paused or Playing*/
@@ -57,10 +58,17 @@ btnVideoElements.forEach(function(div){
     btnVideoMouseDown(div, btnVideoNum);
   });
 });
+btnAudioElements.forEach(function(div){
+  let btnAudioClass = div.classList.toString();
+  let btnAudioNum = btnAudioClass.split("_")[1];
+  div.addEventListener("mousedown", function(){
+    btnAudioMouseDown(div, btnAudioNum);
+  });
+});
 
 function btnVideoMouseDown(div, num){
   window.addEventListener("mouseup", btnVideoMouseUp);
-  isBtnVideo = true;
+  isPlayBtn = true;
 
   function btnVideoMouseUp(){
     video = document.querySelector("[class='"+num+"'] video");
@@ -72,10 +80,32 @@ function btnVideoMouseDown(div, num){
       video.pause();
     }
 
-    isBtnVideo = false;
+    isPlayBtn = false;
     window.removeEventListener("mouseup", btnVideoMouseUp);
   }
 }
+function btnAudioMouseDown(btn, num){
+  window.addEventListener("mouseup", btnAudioMouseUp);
+  console.log("btnAudioOne");
+  isPlayBtn = true;
+
+  function btnAudioMouseUp(){
+    console.log("class: "+num);
+    audio = document.querySelector("[class='"+num+"'] audio");
+    console.log(audio);
+    if(audio.paused){
+      btn.innerHTML = "Pause";
+      audio.play();
+    }else if(!audio.paused){
+      btn.innerHTML = "Play";
+      audio.pause();
+    }
+
+    isPlayBtn = false;
+    window.removeEventListener("mouseup", btnAudioMouseUp);
+  }
+}
+
 
 
 if(elements){
@@ -85,7 +115,7 @@ if(elements){
     })
     div.addEventListener("mousedown", function(){
       /*check if vidBtnElement is not being pressed*/
-      if(!isResizing && !isBtnVideo){
+      if(!isResizing && !isPlayBtn){
         f1(div, index);
       }
     });
@@ -102,7 +132,7 @@ function f1(e, num){
   let prevY = e.clientY;
 
   function f2(e){
-    if(!isResizing && !isBtnVideo){
+    if(!isResizing && !isPlayBtn){
       /*find new mouse position*/
       let newX = prevX-e.clientX;
       let newY = prevY-e.clientY;

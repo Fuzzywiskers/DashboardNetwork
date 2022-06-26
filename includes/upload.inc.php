@@ -117,3 +117,55 @@ if(isset($_POST['submit-video'])){
     header("location: ../dashboard.php?error=errorInFile");
     }
 }
+
+
+/*upload audio*/
+if(isset($_POST['submit-audio'])){
+    $username3 = $_SESSION['username'];
+    $project3 = $_COOKIE['sessionOpened'];
+    $order3 = 0;
+
+    /*create order*/
+    include_once "phpFunctions.inc.php";
+    $order3 = uploadNum($username3, $project3, $order3, $conn);
+
+    /*get file info*/ 
+    $file3 = $_FILES['fileThree'];
+    $fileName3 = $file3['name'];
+    $fileTempName3 = $file3['tmp_name'];
+    $fileError3 = $file3['error'];
+    $fileSize3 = $file3['size'];
+
+    if(empty($fileError3) == True){
+        /*get file extension*/
+        $fileActExt3 = strtolower(explode(".", $fileName3)[1]);
+        $fileType3 = "audio";
+        $allowed3 = array("m4a", "flac", "mp3", "wav", "wma", "aac");
+
+        if(in_array($fileActExt3, $allowed3)){
+            if($fileSize3 < 2000000){
+                $upload = "INSERT INTO dashboard (dashboardUse, dashboardProject, dashboardFile, dashboardOrder, fileType, fileExt) VALUES (?, ?, ?, ?, ?, ?)";
+                $stmt = mysqli_stmt_init($conn);
+                if($conn->connect_error){
+                    die("connection failed: ".$conn->connect_error);
+                }
+                if(!mysqli_stmt_prepare($stmt, $upload)){
+                    header("location: ../dashboard.php?error=sqlFailed");
+                }else{
+                    mysqli_stmt_bind_param($stmt, "ssssss", $username3, $project3, $fileName3, $order3, $fileType3, $fileActExt3);
+                    move_uploaded_file($fileTempName3, "../uploadFile/".$fileName3);
+
+                    mysqli_stmt_execute($stmt);
+                    mysqli_stmt_close($stmt);
+                }
+                header("location: ../dashboard.php?uploade=success");
+            }else{
+                header("location: ../dashboard.php?error=fileSizeTooBig");
+            }
+        }else{
+            header("location: ../dashboard.php?error=fileTypeNotAllowed");
+        }
+    }else{
+        header("location: ../dashbord.php?error=fileHadError");
+    }
+}
