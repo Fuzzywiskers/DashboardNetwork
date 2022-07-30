@@ -8,37 +8,84 @@ session_start();
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style3.css">
+    <link rel="stylesheet" href="css/style.css">
     <title>Dashboard</title>
+
+    <!--gear css-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-<body>
+<?php
+if(!isset($_SESSION['username'])){
+    header("location: index.php");
+}
+include_once "includes/dbh.inc.php";
+$username = $_SESSION['username'];
+$project = $_COOKIE['sessionOpened'];
+$backgroundSQL = "SELECT projectBackground FROM projects WHERE projectUse='$username' AND projectOrder='$project'";
+$stmt = mysqli_stmt_init($conn);
+$backgroundResult = mysqli_query($conn, $backgroundSQL);
+$backgroundSet = mysqli_fetch_assoc($backgroundResult);
+
+if(!mysqli_stmt_prepare($stmt, $backgroundSQL)){
+    echo "<body>";
+}else{
+    echo "<body style='background-image: url(uploadFile/".$backgroundSet['projectBackground'].")'>";
+}
+?>
     
-    <nav>
-        <div>&plus;</div>
-        <!--add a form here for the links-->
-        <li>
-            <a href="#">Add Image</a>
-            <form action="includes/upload.inc.php" method="post" enctype="multipart/form-data">
-                <input type="file" name="fileOne">
-                <button type="submit" name="submit-file">Upload Image</button>
+    <div class="topIcons">
+        <nav class="dropDownMenu">
+            <input type="checkbox" id="plusBtn"></input>
+            <label class="btn" for="plusBtn">&plus;</label>
+            <!--add a form here for the links-->
+            <div class="addElemenets">
+                <li>
+                    <a href="#">Add Image</a>
+                    <form action="includes/upload.inc.php" method="post" enctype="multipart/form-data">
+                        <input type="file" name="fileOne" id="fileOne">
+                        <label class="input input1" for="fileOne">Choose Image</label>
+                        <!--<button type="submit" name="submit-file">Upload Image</button>-->
+                        <input class="input input2" type="submit" name="submit-file" value="Upload Image">
+                    </form>
+                </li>
+                <li>
+                    <a href="#">Add Video</a>
+                    <form action="includes/upload.inc.php" method="post" enctype="multipart/form-data">
+                        <input type="file" name="fileTwo" id="fileTwo">
+                        <label class="input input1" for="fileTwo">Choose Video</label>
+                        <input class="input input2" type="submit" name="submit-video" value="Upload Video">
+                    </form>
+                </li>
+                <li>
+                    <a href="#">Add Audio</a>
+                    <form action='includes/upload.inc.php' method='post' enctype='multipart/form-data'>
+                        <input type='file' name='fileThree' id="fileThree">
+                        <label class="input input1" for="fileThree">Choose Audio</label>
+                        <input class="input input2" type='submit' name='submit-audio' value='Upload Audio'>
+                    </form>
+                </li>
+            </div>
+        </nav> 
+
+        <nav class="saveNav">
+            <form action='includes/dashboard.inc.php' method='post' enctype='multipart/form-data'>
+                    <input class="saveBtn" type='submit' value='Save'>
             </form>
-        </li>
-        <li>
-            <a href="#">Add Video</a>
-            <form action="includes/upload.inc.php" method="post" enctype="multipart/form-data">
-                <input type="file" name="fileTwo">
-                <input type="submit" name="submit-video" value="Upload Video">
-            </form>
-        </li>
-        <li>
-            <a href="#">Add Audio</a>
-            <form action='includes/upload.inc.php' method='post' enctype='multipart/form-data'>
-                <input type='file' name='fileThree'>
-                <input type='submit' name='submit-audio' value='Upload Audio'>
-            </form>
-        </li>
-        <li><a href="#">Add Image</a></li>
-    </nav> 
+        </nav>
+
+        <nav class="settings">
+            <input type="checkbox" id="settingsGear"></input>
+            <label class="btnGear fa fa-gear" for="settingsGear"></label>
+            <li>
+                <a href='#'>Change Background Image</a>
+                <form action='includes/upload.inc.php' method='post' enctype='multipart/form-data'>
+                    <input type='file' name='backgroundImg' id="backgroundImgBtn">
+                    <label class="backImgIn backImgIn1" for="backgroundImgBtn">Upload Image</label>
+                    <input class="backImgIn backImgIn2" type='submit' name='submit-backgroundImg'>
+                </form>
+            </li>
+        </nav>
+    </div>
 
     <!--connect to project-->
     <?php

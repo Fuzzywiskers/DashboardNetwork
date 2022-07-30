@@ -2,7 +2,6 @@
     /*dragable*/
     position: absolute;
 }
-
 /*set resizer divs*/
 .resizer{
     position: absolute;
@@ -31,4 +30,204 @@
     bottom: -1px;
     left: -1px;
     cursor: sw-resize;
+}
+
+/*top icons*/
+#plusBtn, input[type="file"], #settingsGear, #backgroundImgBtn{
+    display: none;
+}
+.btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background-color: #99B898;
+    color: #FFF;
+    border-radius: 50%;
+    font-size: 45px;
+    font-weight: 1000;
+    transition-property: transform;
+    transition-duration: 0.5s;
+}
+#plusBtn:checked + .btn{
+    transform: rotate(45deg)
+}
+.addElemenets{
+    margin-left: -200px;
+    transition: margin-left 0.5s;
+    position: absolute;
+    margin-top: 10px;
+}
+#plusBtn:checked ~ .addElemenets{
+    margin-left: 0px;
+}
+li{
+    list-style: none;
+    margin: 5px;
+    display: flex;
+}
+li a{
+    background-color: #355c7d;
+    width: 120px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    color: white;
+    text-decoration: none;
+    border-radius: 15px;
+    font-size: 20px;
+    transition-property: width, height, left, background-color;
+    transition-duration: 0.5s;
+    z-index: 10;
+}
+.input{
+    border: none;
+    background-color: brown;
+    width: 110px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    position: absolute;
+    margin: 3px;
+    z-index: -1;
+}
+.dropDownMenu{
+    position: relative;
+}
+form{
+    position: absolute;
+    margin-top: -3px;
+    margin-left: 3.5px;
+    transition: margin-left 1s 0.2s, z-index 1s 0.2s, margin-top 0.2s;
+}
+.addElemenets li:hover a{
+    width: 130px;
+    height: 55px;
+    left: 10px;
+    background-color: #F67280;
+}
+.addElemenets li:hover form{
+    margin-left: 140px;
+    margin-top: -23px;
+    transition: margin-top 0.5s 0.5s, margin-left 0.5s;
+}
+.input1{
+    z-index: 5;
+    transition: margin-top 0.5s;
+}
+.input2{
+    z-index: 4;
+    transition: margin-top 0.5s;
+}
+.addElemenets li:hover .input1{
+    margin-top: 0px; 
+    transition: margin-top 0.5s 0.5s;
+}
+.addElemenets li:hover .input2{
+    margin-top: 53px;
+    transition: margin-top 0.5s 0.5s;
+}
+.input:hover{
+    color: white;
+}
+.topIcons{
+    display: flex;
+}
+.saveBtn{
+    border: none;
+    width: 100px;
+    height: 50px;
+    background-color: brown;
+    border-radius: 23px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 25px;
+    transition: width 0.5s, font-size 0.5s, border-radius 0.5s;
+}
+.topIcons nav{
+    padding: 5px;
+}
+.saveBtn:hover{
+    width: 120px;
+    font-size: 30px;
+    border-radius: 30px;
+}
+.btnGear{
+    width: 50px;
+    height: 50px;
+    position: relative;
+    font-size: 45px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.5s;
+}
+.settings{
+    position: absolute;
+    right: 0px;
+}
+#settingsGear:checked + .btnGear{
+    transform: rotate(45deg);
+}
+
+#settingsGear:checked ~ li{
+    right: 0px;
+}
+
+.settings li .backImgIn{
+    border: none;
+    background-color: brown;
+}
+.settings li a{
+    width: 200px;
+    text-align: center;
+}
+
+.settings li {
+    position: absolute;
+    right: -250px;
+    transition: right 0.5s;
+}
+form .backImgIn {
+    position: absolute;
+    width: 100px;
+    height: 50px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+}
+.settings li:hover form {
+    left: -110px;
+    height: 105px;
+    width: 100px;
+    margin-top: -25px;
+    transition: left 0.5s, margin-top 0.5s 0.5s, height 0.5s 0.5s;
+}
+.settings li form{
+    position: absolute;
+    top: 3px;
+    left: 5px;
+    width: 100px;
+    height: 50px;
+    transition: height 0.5s, margin-top 0.5s, left 0.5s 0.5s;
+}
+.backImgIn1{
+    top: 0px;
+    z-index: 5;
+}
+.backImgIn2{
+    bottom: 0px;
+    z-index: 4;
+}
+.backImgIn:hover{
+    color: white;
 }
