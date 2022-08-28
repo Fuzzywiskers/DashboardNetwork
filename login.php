@@ -18,16 +18,16 @@ include_once "header.php";
 
 if(isset($_GET['error'])){
     if($_GET['error'] == 'emptyField'){
-        echo "Please Fill in All Fields";
+        echo "<h3>Please Fill in All Fields</h3>";
     }
     else if($_GET['error'] == 'stmtFailed'){
-        echo "System Failed Please Try Again";
+        echo "<h3>System Failed Please Try Again</h3>";
     }
     else if($_GET['error'] == 'notExistent'){
-        echo "Username/Email is not in the System";
+        echo "<h3>Username/Email is not in the System</h3>";
     }
     else if($_GET['error'] == 'incorrectPassword'){
-        echo "Incorrect Password";
+        echo "<h3>Incorrect Password</h3>";
     }
     else if($_GET['error'] == 'none'){
         header("location: index.php");

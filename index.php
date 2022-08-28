@@ -24,7 +24,7 @@ if(isset($_SESSION['username'])){
 
         while($row = mysqli_fetch_assoc($result)){
             echo "<a href='#'>
-                    <div class='project-js' style='background-color:".$row['projectColor']." ;'>
+                    <div class='project-js project' style='background-color:".$row['projectColor']." ;'>
                         <h2>".$row['projectTitle']."</h2>
                         <p>".$row['projectDesc']."</p>
                     </div>

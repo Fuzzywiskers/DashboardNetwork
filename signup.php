@@ -21,25 +21,25 @@ include_once "header.php";
 
 if(isset($_GET['error'])){
     if($_GET['error'] == 'emptyField'){
-        echo "Please Fill in All Fields";
+        echo "<h3>Please Fill in All Fields</h3>";
     }
     else if($_GET['error'] == 'invalidUse'){
-        echo "Invalid Username";
+        echo "<h3>Invalid Username</h3>";
     }
     else if($_GET['error'] == 'invalidEmail'){
-        echo "Invalid Email";
+        echo "<h3>Invalid Email</h3>";
     }
     else if($_GET['error'] == 'passwordNotMatch'){
-        echo "Password Does Not Match";
+        echo "<h3>Password Does Not Match</h3>";
     }
     else if($_GET['error'] == 'alreadyExists'){
-        echo "Username/Email Already in System";
+        echo "<h3>Username/Email Already in System</h3>";
     }
     else if($_GET['error'] == 'stmtFailed'){
-        echo "System Failed Please Try Again";
+        echo "<h3>System Failed Please Try Again</h3>";
     }
     else if($_GET['error'] == 'none'){
-        header("location: ../index.php");
+        header("location: login.php");
         exit();
     }
 }

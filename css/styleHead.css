@@ -1,0 +1,306 @@
+body{
+    z-index: 10;
+}
+input[type*="checkbox"] {
+    display: none;
+}
+.none{
+    display: none;
+}
+nav{
+    position: absolute;
+    right: 5px;
+    z-index: 10;
+}
+form input {
+    display: flex;
+    flex-direction: column;
+}
+nav li{
+    box-shadow: 0px 0px 10px 0px black;
+    list-style: none;
+    background-color: #F67E7D;
+    width: 100px;
+    height: 50px;
+    border-radius: 25px;
+    margin: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition-property: width, height, border-radius;
+    transition-duration: 0.5s;
+
+    top: -500px;
+}
+nav li a{
+    text-decoration: none;
+    font-size: 25px;
+    color: #843B62;
+    transition-property: font-size, color;
+    transition-duration: 0.5s;
+}
+nav li:hover{
+    width:110px;
+    height: 55px;
+    border-radius: 35px;
+}
+nav li:hover a{
+    font-size: 28px;
+}
+nav div{
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    flex-direction: column;
+    position: absolute;
+
+    top: -1000px;
+    right: -200px;
+
+    transition: right 0.5s, top 0s 0.5s;
+}
+.projectText{
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: lightgray;
+}
+.projectDiv a{
+    text-decoration: none;
+    color: black;
+}
+.project{
+    height: 80px;
+    transition: box-shadow 0.25s;
+}
+.projectDiv a h2{
+    top: 5px;
+    left: 5px;
+    position: relative;
+    font-size: 30px;
+}
+.projectDiv a p{
+    color: black;
+    font-size: 20px;
+    bottom: 5px;
+    position: relative;
+    left: 5px;
+}
+.creatPro{
+    position:absolute;
+}
+.btn{
+    width: 50px;
+    height: 50px;
+    background-color:black;
+    color:white;
+    border-radius: 50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom: 5px;
+    font-size: 40px;
+    font-weight: 700;
+}
+.createProBtnDiv{
+    position: absolute;
+    left: -200px;
+    top: 88px;
+    z-index: 19;
+    width: 100px;
+    height: 50px;
+    transition: left 0.5s;
+}
+.createProBtn{
+    box-shadow: 0px 0px 10px 0px black;
+    width: 100px;
+    height: 50px;
+    border-radius: 25px;
+    font-size: 10px;
+    font-weight: 0;
+    z-index: 20;
+    position: absolute;
+    transition-property: width, height, border-radius, font-size;
+    transition-duration: 0.5s;
+}
+.createProBtn:hover{
+    width:110px;
+    height: 55px;
+    border-radius: 35px;
+    font-size: 12px;
+}
+.createProBtn2{
+    display: none;
+}
+.createProForm{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 150px;
+    background-color: #843B62;
+    border-radius: 10px;
+    box-shadow: 5px 10px;
+
+    z-index: 100;
+    opacity: 0;
+    top: -1000px;
+}
+.createIn{
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.input{
+    margin: 5px;
+}
+.cover{
+    margin-right: 0px;
+    margin-bottom: 0px;
+    background-color: grey;
+    opacity: 50%;
+    z-index: 99;
+}
+.exitCover{
+    opacity: 0;
+    z-index: 100;
+}
+.test1{
+    position: absolute;
+    transition: transform 0.5s;
+}
+.test3{
+    position: absolute;
+    right: 5px;
+}
+.projectDiv{
+    position: relative;
+    top: 60px;
+}
+#test1:checked + .test1{
+    transform: rotate(45deg);
+}
+#test1:checked ~ .createProBtnDiv{
+    left: 8px;
+}
+#test3:checked ~ div{
+    top: 60px;
+    right: 5px;
+
+    transition: right 0.5s;
+}
+
+#test2:checked ~ .createProForm, #test2:checked ~ .exitCover{
+    opacity: 100;
+    top: 50%;
+}
+#test2:checked ~ .cover{
+    position:fixed;
+    padding:0;
+    margin:0;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
+    background-color: cadetblue;
+}
+#test2:checked ~ .createProBtn2 h3{
+    color: white;
+    font-size: 40px;
+    font-weight: 700;
+}
+#test2:checked ~ .createProBtn2{
+    display: flex;
+    width: 50px;
+    height: 50px;
+    z-index: 200;
+    position: absolute;
+    
+    top: 50%;
+    left: 50%;
+    transform: translate(150%, -190%) rotate(45deg);
+}
+.createProForm input{
+    display: flex;
+    justify-content: center;
+    width: 180px;
+    margin: 5px;
+}
+.createProForm h3{
+    display: flex;
+    justify-content: center;
+}
+.exitCover:checked ~ .createProForm, .exitCover:checked ~ .cover{
+    opacity: 0;
+}
+
+.project:hover{
+    box-shadow: 7px 7px 0 0px black;
+}
+
+
+/*sign up page*/
+.banner{
+    position: fixed;
+    display: flex;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    background-color: black;
+    height: 65px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+}
+.banner li{
+    list-style: none;
+    text-underline-offset: none;
+    padding: 40px;
+}
+.banner li a{
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+section h2{
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+section form{
+    position: absolute;
+    top: 350px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+section form input{
+    margin: 15px;
+    width: 250px;
+    height: 25px;
+    color: white;
+    background-color: black;
+    border: none;
+    border-radius: 5px;
+}
+section form input::placeholder{
+    color: white;
+    left: 5px;
+    position: relative;
+}
+section form button{
+    margin: 15px;
+    width: 100px;
+    height: 50px;
+    border-radius: 25px;
+    border: none;
+    background-color: aquamarine;
+}
