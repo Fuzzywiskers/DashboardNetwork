@@ -34,10 +34,10 @@ if(projects){
   projects.forEach(function(div, index){
     div.onclick = function(){
       window.location="dashboard.php";
-      let projectOpened=index-1;
+      let projectOpened=index;
       writeCookie('sessionOpened', projectOpened, 3);
       let projectOpenedTest = getCookie('sessionOpened');
-      console.log(projectOpenedTest);
+      /*console.log(projectOpenedTest);*/
     }
   })
 }
@@ -57,6 +57,11 @@ btnVideoElements.forEach(function(div){
   div.addEventListener("mousedown", function(){
     btnVideoMouseDown(div, btnVideoNum);
   });
+
+  let video = document.querySelector("[class='"+btnVideoNum+"'] video");
+  video.addEventListener("ended", (event)=>{
+    div.innerHTML = "&#9658";
+  })
 });
 btnAudioElements.forEach(function(div){
   let btnAudioClass = div.classList.toString();
@@ -64,6 +69,12 @@ btnAudioElements.forEach(function(div){
   div.addEventListener("mousedown", function(){
     btnAudioMouseDown(div, btnAudioNum);
   });
+
+  let audio = document.querySelector("[class='"+btnAudioNum+"'] audio");
+  audio.addEventListener("ended", (event) =>{
+    div.innerHTML = "&#9658";
+  })
+  /*audio.innerHTML = "&#9658";*/
 });
 
 function btnVideoMouseDown(div, num){
@@ -73,10 +84,10 @@ function btnVideoMouseDown(div, num){
   function btnVideoMouseUp(){
     video = document.querySelector("[class='"+num+"'] video");
     if(video.paused){
-      div.innerHTML = "Pause";
+      div.innerHTML = "&#9646";
       video.play();
     }else if(!video.paused){
-      div.innerHTML = "Play";
+      div.innerHTML = "&#9658";
       video.pause();
     }
 
@@ -86,28 +97,25 @@ function btnVideoMouseDown(div, num){
 }
 function btnAudioMouseDown(btn, num){
   window.addEventListener("mouseup", btnAudioMouseUp);
-  console.log("btnAudioOne");
   isPlayBtn = true;
+  /*console.log(btn);*/
 
   function btnAudioMouseUp(){
-    console.log("class: "+num);
     audio = document.querySelector("[class='"+num+"'] audio");
-    console.log(audio);
     if(audio.paused){
-      btn.innerHTML = "Pause";
+      btn.innerHTML = "&#9646";
       audio.play();
     }else if(!audio.paused){
-      btn.innerHTML = "Play";
+      btn.innerHTML = "&#9658";
       audio.pause();
     }
-
     isPlayBtn = false;
     window.removeEventListener("mouseup", btnAudioMouseUp);
   }
 }
 
 
-
+/*Drag elements*/
 if(elements){
   elements.forEach(function(div, index){
     div.addEventListener("mouseover", function(){
@@ -123,7 +131,7 @@ if(elements){
 }
 
 function f1(e, num){
-  console.log("drag");
+  /*console.log("drag");*/
   window.addEventListener("mouseup", f3);
   window.addEventListener("mousemove", f2);
 
@@ -144,8 +152,8 @@ function f1(e, num){
       elements[num].style.left = domRect.left-newX+"px";
       elements[num].style.top = domRect.top-newY+"px";
       
-      cookieLeft = domRect.left-newX;
-      cookieTop = domRect.top-newY;
+      cookieLeft = domRect.left-newX+"px";
+      cookieTop = domRect.top-newY+"px";
 
       prevX = e.clientX;
       prevY = e.clientY;
@@ -153,12 +161,14 @@ function f1(e, num){
   }
 
   function f3(){
-    console.log(cookieLeft);
-    writeCookie("elX"+num, cookieLeft, 1);
-    writeCookie("elY"+num, cookieTop, 1);
+    /*console.log(cookieLeft);*/
+
+    writeCookie(getCookie('sessionOpened')+"elX"+num, cookieLeft, 1);
+    writeCookie(getCookie('sessionOpened')+"elY"+num, cookieTop, 1);
     window.removeEventListener("mousemove", f2);
     window.removeEventListener("mouseup", f3);
-    window.location= "../officialNewtwork/includes/dashboard.inc.php";
+    /*console.log("Top: "+cookieTop+" | Left: "+cookieLeft);*/
+    //window.location= "../officialNewtwork/includes/dashboard.inc.php";
   }
 }
 
@@ -169,8 +179,8 @@ function f1Re(e, num){
   let currentResizer;
   let cookieWidth;
   let cookieHeight;
-  let cookieTop;
-  let cookieLeft;
+  let cookieTop = getCookie(getCookie('sessionOpened')+"elY"+num);
+  let cookieLeft = getCookie(getCookie('sessionOpened')+"elX"+num);
   for(let resizer of resizers){
     resizer.addEventListener("mousedown", f1Re2);
 
@@ -224,24 +234,32 @@ function f1Re(e, num){
         /*set mouse to current position*/
         prevX = e.clientX;
         prevY = e.clientY;
+        /*console.log("testing one: "+cookieTop+" | testing two: "+cookieLeft);*/
       }
 
       function f3Re2(){
-        writeCookie("resizeWidth"+num, cookieWidth, 1);
-        writeCookie("resizeHeight"+num, cookieHeight, 1);
+        writeCookie(getCookie('sessionOpened')+"resizeWidth"+num, cookieWidth, 1);
+        writeCookie(getCookie('sessionOpened')+"resizeHeight"+num, cookieHeight, 1);
+        /*
+        writeCookie("elY"+num, cookieTop, 1);
+        writeCookie("elX"+num, cookieLeft, 1);
+        */
+
         if(cookieTop){
-          writeCookie("elY"+num, cookieTop, 1);
-          console.log(cookieTop);
+          writeCookie(getCookie('sessionOpened')+"elY"+num, cookieTop, 1);
         }
         if(cookieLeft){
-          writeCookie("elX"+num, cookieLeft, 1);
-          console.log(cookieLeft);
+          writeCookie(getCookie('sessionOpened')+"elX"+num, cookieLeft, 1);
         }
+        /*console.log("testing cookie: "+cookieTop+" | testing cookie2: "+cookieLeft);*/
+        
+        /*console.log("Top: "+getCookie("elY"+num)+" | Left: "+getCookie("elX"+num)+" | Width: "+getCookie("resizeWidth"+num)+" | Height: "+getCookie("resizeHeight"+num));*/
+
         /*window.location = "../officialNewtwork/includes/dashboard.inc.php";*/
         window.removeEventListener("mousemove", f2Re2);
         window.removeEventListener("mouseup", f3Re2);
         isResizing = false;
-        console.log(isResizing+"2");
+        /*console.log(isResizing+"2");*/
       }
     }
   }
